@@ -26,18 +26,31 @@ function App() {
 
     const data = await response.json();
 
-    
+    const loadedMovies = [];
+
+    for(const key in data){
+      loadedMovies.push({
+        id: key,
+        title: data[key].title,
+        openingText: data[key].openingText,
+        releaseDate: data[key].releaseDate,
+      });
+    }
+
+    setMovies(loadedMovies);
+
     // .then(response=>{ return response.json();}).then(data=>{    
       
-      const transformedMovies= data.results.map(movieData=>{
-        return {
-          id: movieData.episode_id,
-          title: movieData.title,
-          openingText: movieData.opening_crawl,
-          releaseDate: movieData.release_date
-        };
-      })
-      setMovies(transformedMovies);
+      // const transformedMovies= data.results.map(movieData=>{
+      //   return {
+      //     id: movieData.episode_id,
+      //     title: movieData.title,
+      //     openingText: movieData.opening_crawl,
+      //     releaseDate: movieData.release_date
+      //   };
+      // })
+
+      // setMovies(transformedMovies);
     
     
   
@@ -53,8 +66,19 @@ function App() {
     fetchMoviesHandler();
   }, [fetchMoviesHandler]);
 
-function addMovieHandler(movie){
-  console.log(movie);
+ async function addMovieHandler(movie){
+  const response = await fetch('https://react-http-76fdb-default-rtdb.firebaseio.com/movies.json', {
+    method: 'POST',
+    body: JSON.stringify(movie),
+    header: {
+      'Content-Type': 'application/json'
+    }
+
+
+  });
+
+  const data = await response.json();
+  console.log(data);
 }
   
 
